@@ -1,4 +1,3 @@
-import 'package:buzz_talk/pages/login_page.dart';
 import 'package:buzz_talk/services/auth_service.dart';
 import 'package:buzz_talk/services/navigation_service.dart';
 import 'package:buzz_talk/utils.dart';
