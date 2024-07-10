@@ -1,6 +1,7 @@
 import 'package:buzz_talk/firebase_options.dart';
 import 'package:buzz_talk/services/alert_service.dart';
 import 'package:buzz_talk/services/auth_service.dart';
+import 'package:buzz_talk/services/media_service.dart';
 import 'package:buzz_talk/services/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
@@ -21,5 +22,8 @@ Future<void> registerServices() async {
   );
   getIt.registerSingleton<AlertService>(
     AlertService(),
+  );
+  getIt.registerSingleton<MediaService>(
+    MediaService(),
   );
 }
