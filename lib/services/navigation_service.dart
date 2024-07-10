@@ -7,9 +7,9 @@ class NavigationService {
   late GlobalKey<NavigatorState> _navigatorKey;
 
   final Map<String, Widget Function(BuildContext)> _routes = {
-    "/login": (context) => LoginPage(),
-    "/home": (context) => HomePage(),
-    "/register": (context) => RegisterPage(),
+    "/login": (context) => const LoginPage(),
+    "/home": (context) => const HomePage(),
+    "/register": (context) => const RegisterPage(),
   };
 
   GlobalKey<NavigatorState>? get navigatorKey {
@@ -22,6 +22,10 @@ class NavigationService {
 
   NavigationService() {
     _navigatorKey = GlobalKey();
+  }
+
+  void push(MaterialPageRoute route) {
+    _navigatorKey.currentState?.push(route);
   }
 
   void pushNamed(String routeName) {

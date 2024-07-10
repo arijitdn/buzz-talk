@@ -208,12 +208,26 @@ class _RegisterPageState extends State<RegisterPage> {
                     icon: Icons.check_circle,
                   );
 
+                  _navigationService.goBack();
                   _navigationService.pushReplacementNamed("/home");
                 }
+              } else {
+                _alertService.showToast(
+                  text: "Failed to register, please try again later!",
+                  icon: Icons.error,
+                );
               }
+            } else {
+              _alertService.showToast(
+                text: "Please fill all the fields and select a profile picture",
+                icon: Icons.error,
+              );
             }
           } catch (e) {
-            rethrow;
+            _alertService.showToast(
+              text: "Failed to register, please try again later!",
+              icon: Icons.error,
+            );
           }
 
           setState(() {
