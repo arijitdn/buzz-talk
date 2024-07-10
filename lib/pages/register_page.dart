@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:buzz_talk/constants.dart';
+import 'package:buzz_talk/models/user_profile.dart';
+import 'package:buzz_talk/services/alert_service.dart';
 import 'package:buzz_talk/services/auth_service.dart';
+import 'package:buzz_talk/services/database_service.dart';
 import 'package:buzz_talk/services/media_service.dart';
 import 'package:buzz_talk/services/navigation_service.dart';
+import 'package:buzz_talk/services/storage_service.dart';
 import 'package:buzz_talk/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -21,8 +25,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   late AuthService _authService;
   late NavigationService _navigationService;
-
   late MediaService _mediaService;
+  late StorageService _storageService;
+  late DatabaseService _databaseService;
+  late AlertService _alertService;
 
   String? email, password, name;
   File? selectedImage;
@@ -34,6 +40,9 @@ class _RegisterPageState extends State<RegisterPage> {
     _authService = _getIt.get<AuthService>();
     _mediaService = _getIt.get<MediaService>();
     _navigationService = _getIt.get<NavigationService>();
+    _storageService = _getIt.get<StorageService>();
+    _databaseService = _getIt.get<DatabaseService>();
+    _alertService = _getIt.get<AlertService>();
   }
 
   @override
@@ -181,10 +190,30 @@ class _RegisterPageState extends State<RegisterPage> {
               _registerFormKey.currentState?.save();
               bool result = await _authService.signUp(email!, password!);
 
-              if (result) {}
+              if (result) {
+                String? pfpURL = await _storageService.uploadUserPfp(
+                    file: selectedImage!, uid: _authService.user!.uid);
+
+                if (pfpURL != null) {
+                  await _databaseService.createUserProfile(
+                    userProfile: UserProfile(
+                      uid: _authService.user!.uid,
+                      name: name!,
+                      pfpURL: pfpURL,
+                    ),
+                  );
+
+                  _alertService.showToast(
+                    text: "Account created successfully",
+                    icon: Icons.check_circle,
+                  );
+
+                  _navigationService.pushReplacementNamed("/home");
+                }
+              }
             }
           } catch (e) {
-            print(e);
+            rethrow;
           }
 
           setState(() {
